@@ -1,0 +1,24 @@
+{
+  "name": "ventrove",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/huynhjjk/ventrove.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/huynhjjk/ventrove/issues"
+  },
+  "homepage": "https://github.com/huynhjjk/ventrove#readme",
+  "devDependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.2",
+    "q": "^1.5.1"
+  }
+}
