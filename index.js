@@ -2,7 +2,7 @@ var request = require('request');
 var Q = require('q');
 var cheerio = require('cheerio');
 var express = require('express');
-
+var sentiment = require('sentiment');
 
 var app = express();
 
@@ -15,7 +15,9 @@ var server = app.listen(3000, 'localhost', function () {
 	var port = server.address().port
 	console.log('Listening at http://%s:%s', host, port)
   // getSubReddit('litecoin').then(function(urls) {});
-  getGoogleTrends().then(function(urls) {});
+  // getGoogleTrends().then(function(urls) {});
+  var r1 = sentiment('Cats are stupid.');
+  console.log(r1);
 });
 
 var getSubReddit = function(searchQuery) {
