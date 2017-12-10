@@ -17,8 +17,11 @@
   },
   "homepage": "https://github.com/huynhjjk/ventrove#readme",
   "devDependencies": {
+    "async": "^2.6.0",
     "cheerio": "^1.0.0-rc.2",
     "express": "^4.16.2",
+    "google-finance": "^0.1.10",
+    "google-trends-api": "^4.3.0",
     "q": "^1.5.1",
     "request": "^2.83.0",
     "sentiment": "^4.1.0"
