@@ -8,7 +8,7 @@ const sentiment = require('sentiment');
 const googleTrends = require('google-trends-api');
 const googleFinance = require('google-finance');
 const chalk = require('chalk');
-
+const commander = require('commander');
 const app = express();
 
 app.get('/', function (req, res) {
@@ -19,7 +19,24 @@ const server = app.listen(3000, 'localhost', function () {
 	const host = server.address().address
 	const port = server.address().port
   console.log('Listening at http://%s:%s', host, port)
+
+  var program = commander;
+ 
+  program
+    .version('0.1.0')
+    .option('-a, --all', 'All')
+    .parse(process.argv);
+   
+  if (program.all) {
+    console.log('All');
+  };
   console.log(chalk.blue('Hello world!'));
+
+
+
+
+
+
   // googleFinance.companyNews({
   //   symbol: 'NASDAQ:AAPL'
   // }, function (err, news) {
