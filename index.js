@@ -27,16 +27,25 @@ const server = app.listen(3000, 'localhost', function () {
   program
     .version('0.1.0')
     .option('-a, --all', 'All')
+    .option('-r, --subreddit', 'Trending SubReddits')
+    .option('-g, --github', 'Trending GitHub Repos')
     .parse(process.argv);
    
   if (program.all) {
     console.log(colors.red('All'));
   };
-  console.log(chalk.blue('Hello world!'));
-
-  getTrendingSubReddits().then(function(data) {
-    console.log(data);
-  });
+  if (program.subreddit) {
+    console.log(colors.red('Trending SubReddits'));
+    getTrendingSubReddits().then(function(data) {
+      console.log(data);
+    });
+  };
+  if (program.github) {
+    console.log(colors.red('Trending GitHub Repos'));
+    getTrendingGitHubRepos().then(function(data) {
+      console.log(data);
+    });
+  };
 
   // googleFinance.companyNews({
   //   symbol: 'NASDAQ:AAPL'
@@ -87,13 +96,33 @@ const getTrendingSubReddits = function() {
       var growth24hrs = $('.span4.listing').last();
       growth24hrs.each(function(){
         $(this).find(".listing-item").each(function() {
-          var subReddit = $(this).find('.subreddit-url a').text();
-          var growthStat24Hr = $(this).find('.growth-stat').text();
+          var subReddit = $(this).find('.subreddit-url a').text().trim();
+          var growthStat24Hr = $(this).find('.growth-stat').text().trim();
           growthStat24Hr = growthStat24Hr.replace('%','');
           trendingSubReddits.push({subReddit,growthStat24Hr});
         });
       });
     deferred.resolve(trendingSubReddits);
+    }
+  });
+  return deferred.promise;
+}
+
+const getTrendingGitHubRepos = function() {
+  const deferred = Q.defer();
+  const baseUrl = 'https://github.com';
+  const url = baseUrl + '/trending';
+  request(url, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      const $ = cheerio.load(body);
+      const trendingGitHubRepos = [];
+      $(".repo-list li").each(function() {
+        const name = $(this).find('h3 a').text().trim();
+        const description = $(this).find('.py-1').text().trim();
+        const url = baseUrl + $(this).find('h3 a').attr('href');
+        trendingGitHubRepos.push({name, description, url})
+      });
+      deferred.resolve(trendingGitHubRepos);
     }
   });
   return deferred.promise;
