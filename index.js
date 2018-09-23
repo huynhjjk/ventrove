@@ -34,6 +34,10 @@ const server = app.listen(3000, 'localhost', function () {
   };
   console.log(chalk.blue('Hello world!'));
 
+  getTrendingSubReddits().then(function(data) {
+    console.log(data);
+  });
+
   // googleFinance.companyNews({
   //   symbol: 'NASDAQ:AAPL'
   // }, function (err, news) {
@@ -72,6 +76,28 @@ const server = app.listen(3000, 'localhost', function () {
 	//   console.log(err);
 	// })
 });
+
+const getTrendingSubReddits = function() {
+  const deferred = Q.defer();
+  const url = 'http://redditlist.com/all';
+  request(url, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      const $ = cheerio.load(body);
+      const trendingSubReddits = [];
+      var growth24hrs = $('.span4.listing').last();
+      growth24hrs.each(function(){
+        $(this).find(".listing-item").each(function() {
+          var subReddit = $(this).find('.subreddit-url a').text();
+          var growthStat24Hr = $(this).find('.growth-stat').text();
+          growthStat24Hr = growthStat24Hr.replace('%','');
+          trendingSubReddits.push({subReddit,growthStat24Hr});
+        });
+      });
+    deferred.resolve(trendingSubReddits);
+    }
+  });
+  return deferred.promise;
+}
 
 const getSubReddit = function(searchQuery) {
   const deferred = Q.defer();
