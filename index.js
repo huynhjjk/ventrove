@@ -96,10 +96,12 @@ const getTrendingSubReddits = function() {
       var growth24hrs = $('.span4.listing').last();
       growth24hrs.each(function(){
         $(this).find(".listing-item").each(function() {
-          var subReddit = $(this).find('.subreddit-url a').text().trim();
+          var selection = $(this).find('.subreddit-url a');
+          var subReddit = selection.text().trim();
+          var url = selection.attr('href');
           var growthStat24Hr = $(this).find('.growth-stat').text().trim();
           growthStat24Hr = growthStat24Hr.replace('%','');
-          trendingSubReddits.push({subReddit,growthStat24Hr});
+          trendingSubReddits.push({subReddit, url, growthStat24Hr});
         });
       });
     deferred.resolve(trendingSubReddits);
@@ -117,10 +119,11 @@ const getTrendingGitHubRepos = function() {
       const $ = cheerio.load(body);
       const trendingGitHubRepos = [];
       $(".repo-list li").each(function() {
-        const name = $(this).find('h3 a').text().trim();
+        const selection = $(this).find('h3 a');
+        const name = selection.text().trim();
+        const url = baseUrl + selection.attr('href');
         const description = $(this).find('.py-1').text().trim();
-        const url = baseUrl + $(this).find('h3 a').attr('href');
-        trendingGitHubRepos.push({name, description, url})
+        trendingGitHubRepos.push({name, url, description})
       });
       deferred.resolve(trendingGitHubRepos);
     }
