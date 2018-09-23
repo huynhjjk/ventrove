@@ -1,3 +1,4 @@
+const util = require('util')
 var request = require('request');
 var async = require('async');
 var Q = require('q');
@@ -24,12 +25,14 @@ var server = app.listen(3000, 'localhost', function () {
   //   console.log(news);
   // });
   // getSubReddit('litecoin').then(function(urls) {});
-  getGoogleTrendsKeywords().then(function(keywords) {
-    console.log(keywords);
-  });
-  // var r1 = sentiment('Cats are stupid.');
+  // getGoogleTrendsKeywords().then(function(keywords) {
+  //   console.log(keywords);
+  // });
+  // var text = "The movie attempts to be surreal by incorporating various time paradoxes,"+
+  //               "but it's presented in such a ridiculous way it's seriously boring.";
+  // var r1 = sentiment(text);
   // console.log(r1);
-  // googleTrends.interestOverTime({keyword: 'litecoin', startTime: new Date('2017-01-01'), endTime: new Date(Date.now())})
+  // googleTrends.interestOverTime({keyword: 'bitcoin', startTime: new Date('2017-01-01'), endTime: new Date(Date.now())})
   // .then(function(results){
   //   var timelineData = JSON.parse(results).default.timelineData;
   //   console.log(timelineData);
@@ -37,6 +40,21 @@ var server = app.listen(3000, 'localhost', function () {
   // .catch(function(err){
   //   console.error('Oh no there was an error', err);
   // });
+
+
+	// googleTrends.relatedTopics({keyword: 'bitcoin', startTime: new Date('2017-01-01'), endTime: new Date(Date.now())})
+	// .then((results) => {
+	// 	var relatedKeyWords = [];
+	//  var relatedTopics = JSON.parse(results).default.rankedList;
+	//  for (var i = 0; i < relatedTopics.length; i++) {
+	// 	 for (var j = 0; j < relatedTopics[i].rankedKeyword.length; j++) {
+	// 		 console.log(util.inspect(relatedTopics[i]['rankedKeyword'][j]['topic']['title'], false, null));
+	// 	 }
+	//  };
+	// })
+	// .catch((err) => {
+	//   console.log(err);
+	// })
 });
 
 var getSubReddit = function(searchQuery) {
