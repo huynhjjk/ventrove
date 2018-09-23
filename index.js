@@ -8,6 +8,7 @@ const sentiment = require('sentiment');
 const googleTrends = require('google-trends-api');
 const googleFinance = require('google-finance');
 const chalk = require('chalk');
+const colors = require('colors');
 const commander = require('commander');
 const app = express();
 
@@ -28,7 +29,7 @@ const server = app.listen(3000, 'localhost', function () {
     .parse(process.argv);
    
   if (program.all) {
-    console.log('All');
+    console.log(colors.red('All'));
   };
   console.log(chalk.blue('Hello world!'));
 
