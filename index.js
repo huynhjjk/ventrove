@@ -29,6 +29,7 @@ const server = app.listen(3000, 'localhost', function () {
     .option('-a, --all', 'All')
     .option('-r, --subreddit', 'Trending SubReddits')
     .option('-g, --github', 'Trending GitHub Repos')
+    .option('-y, --youtube', 'Trending Youtube Videos')
     .parse(process.argv);
    
   if (program.all) {
@@ -43,6 +44,12 @@ const server = app.listen(3000, 'localhost', function () {
   if (program.github) {
     console.log(colors.red('Trending GitHub Repos'));
     getTrendingGitHubRepos().then(function(data) {
+      console.log(data);
+    });
+  };
+  if (program.youtube) {
+    console.log(colors.red('Trending YouTube Videos'));
+    getTrendingYoutubeVideos().then(function(data) {
       console.log(data);
     });
   };
@@ -126,6 +133,28 @@ const getTrendingGitHubRepos = function() {
         trendingGitHubRepos.push({name, url, description})
       });
       deferred.resolve(trendingGitHubRepos);
+    }
+  });
+  return deferred.promise;
+}
+
+
+const getTrendingYoutubeVideos = function() {
+  const deferred = Q.defer();
+  const url = 'https://www.youtube.com/feed/trending';
+  request(url, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      const $ = cheerio.load(body);
+      const trendingYouTubeVideos = [];
+      $("a .video-title").each(function() {
+        console.log($(this).text());
+        // const selection = $(this).find('h3 a');
+        // const name = selection.text().trim();
+        // const url = baseUrl + selection.attr('href');
+        // const description = $(this).find('.py-1').text().trim();
+        // trendingYouTubeVideos.push({name, url, description})
+      });
+      deferred.resolve(trendingYouTubeVideos);
     }
   });
   return deferred.promise;
