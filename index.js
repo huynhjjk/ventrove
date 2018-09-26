@@ -12,6 +12,13 @@ const colors = require('colors');
 const _ = require('lodash');
 const commander = require('commander');
 const app = express();
+const Firestore = require('@google-cloud/firestore');
+const firestore = new Firestore({
+  projectId: 'ventrips-214422',
+  keyFilename: './../ventrips-214422-firebase-adminsdk-w9d9x-fa4567e61b.json',
+});
+const settings = { timestampsInSnapshots: true};
+firestore.settings(settings);
 
 app.get('/', function (req, res) {
   res.send('Hello World!')
@@ -44,9 +51,10 @@ const server = app.listen(3000, 'localhost', function () {
   if (program.github) {
     console.log(colors.red('Trending GitHub Repos'));
     getTrendingGitHubRepos().then(function(data) {
-      _.forEach(data, item => {
-        postDocument(item, 'test');
-      })
+      postDocuments(data, 'items');
+    }).catch(error => {
+      console.error('Failed to get trending GitHub Repos');
+      console.error(error);
     });
   };
   if (program.youtube) {
@@ -95,22 +103,19 @@ const server = app.listen(3000, 'localhost', function () {
 	// })
 });
 
-function postDocument(object, collectionName) {
-  const Firestore = require('@google-cloud/firestore');
-  const firestore = new Firestore({
-    projectId: 'ventrips-214422',
-    keyFilename: './../ventrips-214422-firebase-adminsdk-w9d9x-fa4567e61b.json',
+function postDocuments(data, collectionName) {
+  var writeBatch = firestore.batch();
+  _.forEach(data, item => {
+    const documentRef = firestore.collection(collectionName).doc();
+    writeBatch.create(documentRef, item);
   });
-  const settings = { timestampsInSnapshots: true};
-  firestore.settings(settings);
-  const collection = firestore.collection(collectionName);
-    collection.add(object).then(() => {
-      // Document created successfully.
-      console.log('created');
-    }).error((error) => {
-      console.log(error);
-    });
-};
+  writeBatch.commit().then(() => {
+    console.log('Successfully executed batch.');
+  }).catch(error => {
+    console.error('Failed to execute batch.')
+    console.log(error);
+  });
+}
 
 const getTrendingSubReddits = function() {
   const deferred = Q.defer();
