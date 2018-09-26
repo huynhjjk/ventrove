@@ -44,7 +44,9 @@ const server = app.listen(3000, 'localhost', function () {
   if (program.github) {
     console.log(colors.red('Trending GitHub Repos'));
     getTrendingGitHubRepos().then(function(data) {
-      console.log(data);
+      _.forEach(data, item => {
+        postDocument(item, 'test');
+      })
     });
   };
   if (program.youtube) {
@@ -92,6 +94,23 @@ const server = app.listen(3000, 'localhost', function () {
 	//   console.log(err);
 	// })
 });
+
+function postDocument(object, collectionName) {
+  const Firestore = require('@google-cloud/firestore');
+  const firestore = new Firestore({
+    projectId: 'ventrips-214422',
+    keyFilename: './../ventrips-214422-firebase-adminsdk-w9d9x-fa4567e61b.json',
+  });
+  const settings = { timestampsInSnapshots: true};
+  firestore.settings(settings);
+  const collection = firestore.collection(collectionName);
+    collection.add(object).then(() => {
+      // Document created successfully.
+      console.log('created');
+    }).error((error) => {
+      console.log(error);
+    });
+};
 
 const getTrendingSubReddits = function() {
   const deferred = Q.defer();

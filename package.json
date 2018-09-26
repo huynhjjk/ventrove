@@ -29,6 +29,9 @@
     "lodash": "^4.17.11",
     "q": "^1.5.1",
     "request": "^2.88.0",
-    "sentiment": "^4.2.0"
+    "sentiment": "^4.2.0",
+    "@google-cloud/debug-agent": "^2.6.0",
+    "@google-cloud/firestore": "^0.16.1",
+    "@google-cloud/storage": "^1.7.0"
   }
 }
